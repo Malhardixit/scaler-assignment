@@ -1,0 +1,130 @@
+body{
+    background-color:#F5F5F5;
+}
+
+.master-card {
+    padding: 50px;
+    width: 60vw;
+    background-color: white;
+    margin: 25px auto;
+    border-radius: 10px;
+}
+
+.inner-card {
+    background-color: #F5F5F5;
+    padding: 25px;
+    border-radius: 10px;
+    margin: 15px auto;
+    width: 30vw ;
+}
+
+.cardWrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.parent{
+    display: flex;
+    flex-direction: row;
+
+}
+
+.calendar{
+    margin-top: 20px;
+    padding: 1rem;
+ 
+}
+
+.name{
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #101010;
+    text-align: center;
+}
+
+.date{
+    font-size: 13px;
+    color: #101010;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.time{
+    font-size: 13px;
+    color: #101010;
+    text-align: center;
+}
+
+.location{
+    font-size: 10px;
+    text-align:center;
+    margin-top: -5px;
+}
+
+.role{
+    font-size: 10px;
+    text-align:center;
+    margin-top: 15px;
+    
+}
+
+img{
+   align-items: center;
+    margin: 0 auto;
+    display: block;
+
+}
+
+.calendar{
+    background-color: white;
+    border-radius: 10px;
+    margin: 20px auto;
+}
+
+.scheduleCard{
+        padding: 30px;
+        width: 12vw auto;
+        background-color: #F4F4F4;
+        margin: 18px auto;
+        border-radius: 10px;
+        
+}
+
+.text{
+    font-size:12px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.schedulePos{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+
+
+@media screen and (max-width: 768px) {
+    .cardWrapper{
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .inner-card{
+        width: 30vw;
+    }
+
+    .parent{
+        flex-direction: column;
+    }
+
+    .calendar{
+        margin: 0 auto;
+        display: block;
+
+    }
+}
+
+    

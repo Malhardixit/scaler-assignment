@@ -8,19 +8,17 @@ A simple and userfriendly interview portal where admins can create interviews by
 -Technologies Used(#tech)
 
 
-##install
+#install
 Clone the repository:`https://github.com/Malhardixit/scaler-assignment.git`
 Navigate to project directory:`cd scaler-assignment`
 Install dependencies: `yarn`
 
 
 
-##usage
+#usage
 To start the development server, run the following command:
-```bash
-yarn dev```
+`yarn dev`
 
 To start the backend server, run the following command:
-```bash
-cd server
-node app```
+`cd server`
+`node app`

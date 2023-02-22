@@ -1,7 +1,7 @@
 # InterView-Portal
 A simple and userfriendly interview portal where admins can create interviews by selecting participants,interview start time and end time
 
-##Table of Contents
+# Table of Contents
 -Installation(#install)
 -Usage(#usage)
 -API Endpoints(#api)

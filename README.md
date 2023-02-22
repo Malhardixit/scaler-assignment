@@ -10,7 +10,9 @@ A simple and userfriendly interview portal where admins can create interviews by
 
 ## Installation
 Clone the repository:`https://github.com/Malhardixit/scaler-assignment.git`
+
 Navigate to project directory:`cd scaler-assignment`
+
 Install dependencies: `yarn`
 
 

@@ -11,13 +11,6 @@ const cors = require("cors");
 app.use(bodyParser.json());
 app.use(cors());
 
-Participant.insertMany([
-  {
-    participantName: ["Riddhiman", "Rahul", "Rajat", "Rajesh", "Rajiv", "Raj"],
-    participantID: ["1", "2", "3", "4", "5", "6"],
-  },
-]);
-
 mongoose.connect(config.mongoURI, {
   useNewUrlParser: true,
 });
@@ -55,21 +48,35 @@ app.get("/viewParticipants", async (req, res) => {
   });
 });
 
+//Get the interview by date
+app.get("/getInterviewsbyDate/:date", (req, res) => {
+  const { date } = req.params;
+  Interview.find({ date: new Date(date) })
+    .then((interviews) => {
+      if (interviews.length === 0) {
+        res.status(404).send("No interviews found");
+      } else {
+        res.status(200).send(interviews);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).send("Oops! Something went wrong");
+    });
+});
+
 //Route for creating a new interview
 app.post("/createInterview", async (req, res) => {
   const { participants, participantID, interviewID, date, startTime, endTime } =
     req.body;
 
-  const startDateTime = moment(`${date} ${startTime}`, "DD-MM-YYYY HH:mm");
-  const endDateTime = moment(`${date} ${endTime}`, "DD-MM-YYYY HH:mm");
-
   const participantConflicts = await Promise.all(
     participantID.map(async (id) => {
       const participantInterviews = await Interview.find({
         participantID: id,
-        date: startDateTime.toDate(),
-        startTime: { $lt: endDateTime.toDate() },
-        endTime: { $gt: startDateTime.toDate() },
+        date: new Date(date),
+        startTime: { $lt: endTime },
+        endTime: { $gt: startTime },
       });
 
       return participantInterviews.length > 0;
@@ -85,9 +92,9 @@ app.post("/createInterview", async (req, res) => {
     participants,
     participantID,
     interviewID,
-    date: startDateTime.toDate(),
-    startTime: startDateTime.toDate(),
-    endTime: endDateTime.toDate(),
+    date: new Date(date),
+    startTime: startTime,
+    endTime: endTime,
   });
 
   interview
@@ -101,7 +108,6 @@ app.post("/createInterview", async (req, res) => {
       res.status(404).send("Oops! Error creating interview");
     });
 });
-
 // Route for getting interview by interviewerID
 app.post("/getInterviewByDate", async (req, res) => {
   const { interviewID } = req.body;

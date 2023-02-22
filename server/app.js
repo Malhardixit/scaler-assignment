@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const Interview = require("./models/interViewSchema");
 const Participant = require("./models/participant");
 const config = require("./config");
-const moment = require("moment");
 const cors = require("cors");
 
 app.use(bodyParser.json());
@@ -27,7 +26,7 @@ app.get("/interviews", (req, res) => {
   Interview.find()
     .then((interviews) => {
       if (interviews.length === 0) {
-        res.status(400).send("No interviews found");
+        res.status(500).send("No interviews found");
       } else {
         res.status(200).send(interviews);
       }
@@ -41,7 +40,7 @@ app.get("/interviews", (req, res) => {
 app.get("/viewParticipants", async (req, res) => {
   await Participant.find().then((participant) => {
     if (participant.length === 0) {
-      res.status(400).send("No participants found");
+      res.status(500).send("No participants found");
     } else {
       res.status(200).send(participant);
     }
@@ -54,7 +53,7 @@ app.get("/getInterviewsbyDate/:date", (req, res) => {
   Interview.find({ date: new Date(date) })
     .then((interviews) => {
       if (interviews.length === 0) {
-        res.status(404).send("No interviews found");
+        res.status(500).send("No interviews found");
       } else {
         res.status(200).send(interviews);
       }
@@ -67,8 +66,13 @@ app.get("/getInterviewsbyDate/:date", (req, res) => {
 
 //Route for creating a new interview
 app.post("/createInterview", async (req, res) => {
-  const { participants, participantID, interviewID, date, startTime, endTime } =
+  const { participantsName, participantID, date, startTime, endTime } =
     req.body;
+
+  // if (participants.length < 2) {
+  //   res.status(500).send("There must be at least 2 participants");
+  //   return;
+  // }
 
   const participantConflicts = await Promise.all(
     participantID.map(async (id) => {
@@ -84,14 +88,13 @@ app.post("/createInterview", async (req, res) => {
   );
 
   if (participantConflicts.some((conflict) => conflict)) {
-    res.status(404).send("Participant is busy");
+    res.status(500).send("Participant is busy");
     return;
   }
 
   const interview = new Interview({
-    participants,
+    participantsName,
     participantID,
-    interviewID,
     date: new Date(date),
     startTime: startTime,
     endTime: endTime,
@@ -101,110 +104,12 @@ app.post("/createInterview", async (req, res) => {
     .save()
     .then((interview) => {
       console.log(interview);
-      res.status(200).send(interview);
+      res.status(200).send("Interview Scheduled Successfully", interview);
     })
     .catch((err) => {
       console.log(err);
       res.status(404).send("Oops! Error creating interview");
     });
 });
-// Route for getting interview by interviewerID
-app.post("/getInterviewByDate", async (req, res) => {
-  const { interviewID } = req.body;
-
-  const interviews = await Interview.find({
-    interviewID: interviewID,
-  });
-
-  if (interviews.length === 0) {
-    res.status(400).send("No interviews found");
-  } else {
-    res.status(200).send(interviews);
-  }
-});
 
 app.listen(3001, () => console.log("Server started"));
-
-// app.post("/createInterview", (req, res) => {
-//   const { participants, participantID, interviewID, date, startTime, endTime } =
-//     req.body;
-
-//   //Configuring the date and time in the correct format
-//   const startDateTimeString = `${date} ${startTime}`;
-//   const endDateTimeString = `${date} ${endTime}`;
-
-//   const startDateTime = moment(
-//     startDateTimeString,
-//     "DD-MM-YYYY HH:mm"
-//   ).toDate();
-//   const endDateTime = moment(endDateTimeString, "DD-MM-YYYY HH:mm").toDate();
-
-//   const dateFormat = moment(date, "DD-MM-YYYY").toDate();
-
-//   for (let i = 0; i < participantID.length; i++) {
-//     Participant.find({ participantID: participantID[i] }).then(
-//       (participant) => {
-//         const flag = 0;
-//         for (let j = 0; j < participant.interviewID.length; j++) {
-//           Interview.find({ interviewID: participant.interviewID[j] }).then(
-//             (interview) => {
-//               if (
-//                 (interview.data === date && interview.startTime >= endTime) ||
-//                 interview.endTime <= startTime
-//               ) {
-//                 flag = 1;
-//               }
-//             }
-//           );
-//           if (flag === 1) {
-//             res.status(404).send("Participant is busy");
-//             break;
-//           }
-//         }
-//       }
-//     );
-//   }
-
-//   const interview = new Interview({
-//     participants,
-//     participantID,
-//     interviewID,
-//     date: dateFormat,
-//     startTime: startDateTime,
-//     endTime: endDateTime,
-//   });
-//   interview
-//     .save()
-//     .then((interview) => {
-//       console.log(interview);
-//       res.status(200).send(interview);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(404).send("Oops! Error creating interview");
-//     });
-// });
-
-// for (let i = 0; i < participantsID.length; i++) {
-//   Participant.find({ participantsID: participantsID[i] }).then(
-//     (participant) => {
-//       const flag = 0;
-//       for (let j = 0; j < participant.interviewID.length; j++) {
-//         Interview.find({ interviewID: participant.interviewID[j] }).then(
-//           (interview) => {
-//             if (
-//               (interview.data === date && interview.startTime >= endTime) ||
-//               interview.endTime <= startTime
-//             ) {
-//               flag = 1;
-//             }
-//           }
-//         );
-//         if (flag === 1) {
-//           res.status(404).send("Participant is busy");
-//           break;
-//         }
-//       }
-//     }
-//   );
-// }

@@ -14,6 +14,7 @@ function Home() {
   const [search, setSearch] = useState("");
   const [interviews, setInterviews] = useState(null);
   const [editInfo, setEditInfo] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     axios.get("http://localhost:3001/interviews").then((res) => {
@@ -31,19 +32,25 @@ function Home() {
 
   const formatDate = moment(value).format("YYYY-MM-DD");
 
+  const formatDate1 = (date) => {
+    return formatDate;
+  };
+
+  console.log(formatDate);
+
   const handleEditInfo = () => {
     setEditInfo(!editInfo);
   };
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/getInterviewsbyDate/2023-02-22`)
+      .get(`http://localhost:3001/getInterviewsbyDate/${formatDate}`)
       .then((res) => {
-        console.log(res.data);
         setInterviews(res.data);
       })
       .catch((err) => {
         console.log(err);
+        setError(err.response?.data || "Error fetching interviews");
       });
   }, [formatDate]);
 
@@ -75,7 +82,7 @@ function Home() {
                   if (search === "") {
                     return item;
                   } else if (
-                    item.participants
+                    item.participantsName
                       .toString()
                       .toLowerCase()
                       .includes(search.toLowerCase())
@@ -103,20 +110,49 @@ function Home() {
                               outline: "none",
                               backgroundColor: "transparent",
                             }}
-                            defaultValue={item.participants}
+                            defaultValue={item.participantsName}
                             disabled={editInfo}
                             onChange={(e) => {
-                              item.participants = e.target.value;
-                              console.log(item.participants);
+                              item.participantsName = e.target.value;
                             }}
                           />
 
                           <br />
                           <span className="headings">Profile : </span>
                           <br />
-                          <span className="headings">Date : </span>
+                          <span className="headings">
+                            Date :
+                            <input
+                              style={{
+                                border: "none",
+                                outline: "none",
+                                backgroundColor: "transparent",
+                                marginLeft: "10px",
+                              }}
+                              defaultValue={formatDate1(item.date)}
+                              disabled={editInfo}
+                              onChange={(e) => {
+                                item.date = e.target.value;
+                              }}
+                            />
+                          </span>
                           <br />
-                          <span className="headings">Time : </span>
+                          <span className="headings">
+                            Time :
+                            <input
+                              style={{
+                                border: "none",
+                                outline: "none",
+                                backgroundColor: "transparent",
+                                marginLeft: "7px",
+                              }}
+                              defaultValue={item.startTime}
+                              disabled={editInfo}
+                              onChange={(e) => {
+                                item.startTime = e.target.value;
+                              }}
+                            />
+                          </span>
                         </div>
                       </div>
                       <div className="btnWrapper">
@@ -146,26 +182,30 @@ function Home() {
 
           <Calendar onChange={onChange} value={value} />
 
-          {interviews?.map((item) => {
-            return (
-              <div className="parentCard">
-                <div className="nameDiv">
-                  <div
-                    className="circle"
-                    style={{
-                      backgroundColor: randomColor[0],
-                      color: randomColor[1],
-                    }}
-                  ></div>
-                  <p className="detail">
-                    {item.participants.length === 1
-                      ? item.participants
-                      : "Group of " + item.participants.length + ""}
-                  </p>
+          {interviews?.length === 0 ? (
+            <div>{error}</div>
+          ) : (
+            interviews?.map((item) => {
+              return (
+                <div className="parentCard">
+                  <div className="nameDiv">
+                    <div
+                      className="circle"
+                      style={{
+                        backgroundColor: randomColor[0],
+                        color: randomColor[1],
+                      }}
+                    ></div>
+                    <p className="detail">
+                      {item.participantsName.length === 1
+                        ? item.participantsName
+                        : "Group of " + item.participantsName.length + ""}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </>

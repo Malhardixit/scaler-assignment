@@ -2,6 +2,16 @@ import React from "react";
 import "../styles/navbar.css";
 
 function Navbar() {
+  function CustomLink({ href, children, ...props }) {
+    const path = window.location.pathname;
+    return (
+      <li className={path === href ? "active" : ""}>
+        <a href={href} {...props}>
+          {children}
+        </a>
+      </li>
+    );
+  }
   return (
     <>
       <nav className="nav">
@@ -9,16 +19,8 @@ function Navbar() {
           Interview Scheduler
         </a>
         <ul className="nav-links">
-          <li className="active">
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/schedule">Schedule Interview</a>
-          </li>
-
-          <li>
-            <a href="/edit">Edit Interview</a>
-          </li>
+          <CustomLink href="/">Home</CustomLink>
+          <CustomLink href="/schedule">Schedule</CustomLink>
         </ul>
       </nav>
     </>

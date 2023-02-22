@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const interViewSchema = new mongoose.Schema({
-  participants: { type: [String], required: true },
+  participantsName: { type: [String], required: true },
   participantID: [
     {
       type: String,

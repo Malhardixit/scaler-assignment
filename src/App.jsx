@@ -1,7 +1,8 @@
 import "./App.css";
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Schedule from "./pages/Schedule";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 function App() {
   let component;
@@ -16,7 +17,11 @@ function App() {
       break;
   }
 
-  return <>{component}</>;
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <>{component}</>
+    </LocalizationProvider>
+  );
 }
 
 export default App;

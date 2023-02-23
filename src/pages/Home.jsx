@@ -22,11 +22,9 @@ function Home() {
     axios
       .get("http://localhost:3001/interviews")
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
         setError(err.response.data);
       });
   }, []);
@@ -49,8 +47,6 @@ function Home() {
       (interview) => interview.interviewID === interviewID
     );
 
-    console.log(participantID);
-
     const convertStringToDate = moment(date).format("YYYY-MM-DD");
 
     const body = {
@@ -68,7 +64,7 @@ function Home() {
           alert("Interview Updated Successfully!");
         })
         .catch((err) => {
-          console.log(err);
+          alert("Error Updating Interview");
         });
 
       setEditingInterviewID(null);
@@ -83,11 +79,9 @@ function Home() {
     axios
       .get(`http://localhost:3001/getInterviewsbyDate/${formatDate}`)
       .then((res) => {
-        console.log(res.data);
         setTodaySchedule(res.data);
       })
       .catch((err) => {
-        console.log(err);
         setScheduleError(err.response.data);
       });
   }, [formatDate]);

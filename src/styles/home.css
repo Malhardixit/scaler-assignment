@@ -10,6 +10,12 @@ body{
     background-color: white;
     margin: 25px auto;
     border-radius: 5px;
+    overflow-y: scroll;
+    overflow: scroll;
+}
+
+.master-card::-webkit-scrollbar{
+    display: none;
 }
 
 
@@ -60,9 +66,10 @@ body{
 
 
 .calendar{
+    height: 90vh;
     background-color: white;
     border-radius: 10px;
-    margin: 10px auto;
+    margin: 2px auto;
     padding: 1rem;
 }
 
@@ -142,16 +149,18 @@ body{
 } */
 
 .parentCard{
-    display: flex;
+        display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 7px 0;
         border-bottom: 2px solid #dadada;
 }
 
+
 .parentCard:hover{
     transition: all 0.1s ease;
     background-color: #f3f3f3;
+    cursor: pointer;
 }
 
 .circle{
@@ -242,7 +251,7 @@ body{
 .react-calendar__tile--now{
     background-color: #1E4E9E;
     color: white;
-    border-radius: 10px;
+    border-radius: 2px;
 }
 
 

@@ -37,7 +37,6 @@ app.get("/interviews", (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       res.status(404).send("Oops! Something went wrong");
     });
 });
@@ -64,7 +63,6 @@ app.get("/getInterviewsbyDate/:date", (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       res.status(404).send("Oops! Something went wrong");
     });
 });
@@ -73,6 +71,7 @@ app.get("/getInterviewsbyDate/:date", (req, res) => {
 app.post("/createInterview", async (req, res) => {
   const { participantsName, participantID, date, startTime, endTime } =
     req.body;
+
   const participantConflicts = await Promise.all(
     participantID.map(async (id) => {
       const participantInterviews = await Interview.find({
@@ -105,11 +104,9 @@ app.post("/createInterview", async (req, res) => {
   interview
     .save()
     .then((interview) => {
-      console.log(interview);
       res.status(200).send("Interview Scheduled Successfully");
     })
     .catch((err) => {
-      console.log(err);
       res.status(404).send("Oops! Error creating interview");
     });
 });

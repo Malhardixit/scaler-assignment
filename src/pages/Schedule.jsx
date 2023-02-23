@@ -24,8 +24,6 @@ function Schedule() {
     setParticipants(newValue);
   };
 
-  console.log(participants);
-
   const createInterview = (e) => {
     e.preventDefault();
 
@@ -50,7 +48,6 @@ function Schedule() {
     axios
       .post("http://localhost:3001/createInterview", data)
       .then((res) => {
-        console.log(res);
         if (res.data === "Interview Scheduled Successfully") {
           alert("Interview Scheduled");
           setParticipants("");
@@ -60,7 +57,6 @@ function Schedule() {
         }
       })
       .catch((err) => {
-        console.error(err.response.data);
         alert(err.response.data);
         setParticipants("");
         setStartTime(null);
@@ -85,7 +81,6 @@ function Schedule() {
 
   useEffect(() => {
     axios.get("http://localhost:3001/viewParticipants").then((res) => {
-      console.log(res.data);
       setUsers(res.data);
     });
   }, []);

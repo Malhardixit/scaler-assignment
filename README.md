@@ -52,5 +52,3 @@ This is a REST API for creating and fetching interviews
 ### - POST /createInterview: Creates a new interview.
 
 ### - POST /editInterview: Edits an existing interview.
-
-### - POST

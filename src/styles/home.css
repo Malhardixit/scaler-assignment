@@ -66,6 +66,22 @@ body{
     padding: 1rem;
 }
 
+.error{
+    display: flex;
+    margin-top: 150px;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: '400';
+    width: 50%;
+    margin: 200px auto;
+}
+
+.error:hover{
+    color: red;
+    user-select: none;
+}
+
 
 .headings{
     font-weight: bold;

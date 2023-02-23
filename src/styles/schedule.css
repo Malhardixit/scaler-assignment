@@ -11,7 +11,7 @@
     width: 20vw;
     height: 1.5vw;
     border-radius: 10px;
-    margin-left: 20px;
+    margin-left: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease-in-out;
 }
@@ -34,4 +34,11 @@
 .time:hover{
     cursor: pointer;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.heading{
+    text-align: center;
+        margin-bottom: 60px;
+        font-size: 2rem;
+        font-weight: 700;
 }

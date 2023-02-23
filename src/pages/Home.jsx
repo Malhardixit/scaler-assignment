@@ -12,14 +12,23 @@ function Home() {
   const [value, onChange] = useState(new Date());
   const [data, setData] = useState(null);
   const [search, setSearch] = useState("");
-  const [interviews, setInterviews] = useState(null);
-  const [editInfo, setEditInfo] = useState(true);
-  const [error, setError] = useState("");
+  const [todaySchedule, setTodaySchedule] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState(null);
+  const [editingInterviewID, setEditingInterviewID] = useState(null);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/interviews").then((res) => {
-      setData(res.data);
-    });
+    axios
+      .get("http://localhost:3001/interviews")
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err.response.data);
+      });
   }, []);
 
   const colorArray = [
@@ -31,26 +40,55 @@ function Home() {
   const randomColor = colorArray[Math.floor(Math.random() * colorArray.length)];
 
   const formatDate = moment(value).format("YYYY-MM-DD");
-
-  const formatDate1 = (date) => {
-    return formatDate;
+  const formattedDate = (date) => {
+    return moment(date).format("YYYY-MM-DD");
   };
 
-  console.log(formatDate);
+  const handleEditInfo = (interviewID) => {
+    const [{ date, startTime, endTime, participantID }] = data.filter(
+      (interview) => interview.interviewID === interviewID
+    );
 
-  const handleEditInfo = () => {
-    setEditInfo(!editInfo);
+    console.log(participantID);
+
+    const convertStringToDate = moment(date).format("YYYY-MM-DD");
+
+    const body = {
+      date: convertStringToDate,
+      startTime: startTime,
+      endTime: endTime,
+      interviewID: interviewID,
+      participantID: participantID,
+    };
+
+    if (editingInterviewID === interviewID) {
+      axios
+        .post(`http://localhost:3001/editInterview`, body)
+        .then((res) => {
+          alert("Interview Updated Successfully!");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      setEditingInterviewID(null);
+      setIsEditing(false);
+    } else {
+      setEditingInterviewID(interviewID);
+      setIsEditing(true);
+    }
   };
 
   useEffect(() => {
     axios
       .get(`http://localhost:3001/getInterviewsbyDate/${formatDate}`)
       .then((res) => {
-        setInterviews(res.data);
+        console.log(res.data);
+        setTodaySchedule(res.data);
       })
       .catch((err) => {
         console.log(err);
-        setError(err.response?.data || "Error fetching interviews");
+        setScheduleError(err.response.data);
       });
   }, [formatDate]);
 
@@ -58,156 +96,170 @@ function Home() {
     <>
       <Navbar />
 
-      <div className="parent">
-        <div className="master-card">
-          <div className="cardTitle">Upcoming Interviews</div>
-          <div>
-            <div className="searchBar">
-              <input
-                className="inptField"
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                }}
-                placeholder="Search by name"
-                value={search}
-                type="text"
-              />
-              <img className="searchIcon" src={searchIcon} alt="search" />
+      {error ? (
+        <div className="error">{error}</div>
+      ) : (
+        <div className="parent">
+          <div className="master-card">
+            <div className="cardTitle">Upcoming Interviews</div>
+            <div>
+              <div className="searchBar">
+                <input
+                  className="inptField"
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                  placeholder="Search by name"
+                  value={search}
+                  type="text"
+                />
+                <img className="searchIcon" src={searchIcon} alt="search" />
+              </div>
             </div>
-          </div>
-          {
-            <div className="cardWrapper">
-              {data
-                ?.filter((item) => {
-                  if (search === "") {
-                    return item;
-                  } else if (
-                    item.participantsName
-                      .toString()
-                      .toLowerCase()
-                      .includes(search.toLowerCase())
-                  ) {
-                    return item;
-                  }
-                })
+            {
+              <div className="cardWrapper">
+                {data
+                  ?.filter((item) => {
+                    if (search === "") {
+                      return item;
+                    } else if (
+                      item.participantsName
+                        .toString()
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
+                    ) {
+                      return item;
+                    }
+                  })
 
-                .map((item) => {
-                  return (
-                    <div className="inner-card">
+                  .map((item) => {
+                    return (
                       <div
-                        style={{
-                          alignItems: "center",
-                        }}
+                        id={item.interviewID}
+                        key={item.participantID}
+                        className="inner-card"
                       >
-                        <img className="grpImg" src={group} alt="grp" />
+                        <div
+                          style={{
+                            alignItems: "center",
+                          }}
+                        >
+                          <img className="grpImg" src={group} alt="grp" />
 
-                        <div className="name">
-                          <span className="headings">Participants : </span>
+                          <div className="name">
+                            <div style={{ display: "flex" }}>
+                              <span className="headings">Group id : </span>
+                              <div>{item.interviewID}</div>
+                            </div>
+                            <div style={{ display: "flex" }}>
+                              <span className="headings">Participants : </span>
+                              <div>{item.participantsName.join(", ")}</div>
+                            </div>
 
-                          <input
-                            style={{
-                              border: "none",
-                              outline: "none",
-                              backgroundColor: "transparent",
-                            }}
-                            defaultValue={item.participantsName}
-                            disabled={editInfo}
-                            onChange={(e) => {
-                              item.participantsName = e.target.value;
-                            }}
-                          />
-
-                          <br />
-                          <span className="headings">Profile : </span>
-                          <br />
-                          <span className="headings">
-                            Date :
-                            <input
-                              style={{
-                                border: "none",
-                                outline: "none",
-                                backgroundColor: "transparent",
-                                marginLeft: "10px",
-                              }}
-                              defaultValue={formatDate1(item.date)}
-                              disabled={editInfo}
-                              onChange={(e) => {
-                                item.date = e.target.value;
-                              }}
-                            />
-                          </span>
-                          <br />
-                          <span className="headings">
-                            Time :
-                            <input
-                              style={{
-                                border: "none",
-                                outline: "none",
-                                backgroundColor: "transparent",
-                                marginLeft: "7px",
-                              }}
-                              defaultValue={item.startTime}
-                              disabled={editInfo}
-                              onChange={(e) => {
-                                item.startTime = e.target.value;
-                              }}
-                            />
-                          </span>
+                            <span className="headings">
+                              Date :
+                              <input
+                                style={{
+                                  border: "none",
+                                  outline: "none",
+                                  backgroundColor: "transparent",
+                                  marginLeft: "10px",
+                                }}
+                                defaultValue={formattedDate(item.date)}
+                                disabled={!isEditing}
+                                onChange={(e) => {
+                                  item.date = e.target.value;
+                                }}
+                              />
+                            </span>
+                            <br />
+                            <span className="headings">
+                              Time :
+                              <input
+                                style={{
+                                  border: "none",
+                                  outline: "none",
+                                  backgroundColor: "transparent",
+                                  marginLeft: "7px",
+                                }}
+                                defaultValue={[item.startTime, item.endTime]}
+                                disabled={!isEditing}
+                                onChange={(e) => {
+                                  item.startTime = e.target.value;
+                                }}
+                              />
+                            </span>
+                          </div>
+                        </div>
+                        <div className="btnWrapper">
+                          <button
+                            id={`edit-btn-${item.interviewID}`}
+                            onClick={() => handleEditInfo(item.interviewID)}
+                            className="Editbutton"
+                          >
+                            <span style={{ fontSize: "16px" }}>
+                              {editingInterviewID === item.interviewID
+                                ? "Save"
+                                : "Edit"}
+                            </span>
+                          </button>
                         </div>
                       </div>
-                      <div className="btnWrapper">
-                        <button onClick={handleEditInfo} className="Editbutton">
-                          <span style={{ fontSize: "16px" }}>
-                            {editInfo ? "Edit" : "Save"}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          }
-        </div>
-        <div className="calendar">
-          <div
-            style={{
-              marginTop: "10px",
-              fontSize: "18px",
-              color: "black",
-              fontWeight: "500",
-            }}
-          >
-            Today's Schedule
+                    );
+                  })}
+              </div>
+            }
           </div>
+          <div className="calendar">
+            <div
+              style={{
+                marginTop: "10px",
+                fontSize: "18px",
+                color: "black",
+                fontWeight: "500",
+              }}
+            >
+              Today's Schedule
+            </div>
 
-          <Calendar onChange={onChange} value={value} />
+            <Calendar onChange={onChange} value={value} />
 
-          {interviews?.length === 0 ? (
-            <div>{error}</div>
-          ) : (
-            interviews?.map((item) => {
+            {todaySchedule?.map((item) => {
               return (
-                <div className="parentCard">
-                  <div className="nameDiv">
+                <>
+                  <div key={item.participantID} className="parentCard">
                     <div
-                      className="circle"
-                      style={{
-                        backgroundColor: randomColor[0],
-                        color: randomColor[1],
+                      onClick={() => {
+                        setModal(!modal);
                       }}
-                    ></div>
-                    <p className="detail">
-                      {item.participantsName.length === 1
-                        ? item.participantsName
-                        : "Group of " + item.participantsName.length + ""}
-                    </p>
+                      className="nameDiv"
+                    >
+                      <div
+                        className="circle"
+                        style={{
+                          backgroundColor: randomColor[0],
+                          color: randomColor[1],
+                        }}
+                      >
+                        {item.participantsName.length}
+                      </div>
+
+                      <p className="detail">
+                        {"Group of " + item.participantsName.length}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                  {modal === true ? (
+                    <div style={{ margin: "8px auto" }}>
+                      {item.participantsName.join(", ")}
+                    </div>
+                  ) : null}
+                </>
               );
-            })
-          )}
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

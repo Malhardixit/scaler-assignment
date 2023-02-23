@@ -12,6 +12,7 @@ const interViewSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },
+  interviewID: { type: String, required: true },
 });
 
 const Interview = mongoose.model("Interview", interViewSchema);

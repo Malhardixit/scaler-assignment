@@ -39,11 +39,6 @@ function Schedule() {
       (participant) => participant.label
     );
 
-    console.log({
-      participantIds: participantID,
-      participants: participantsName.join(", "),
-    });
-
     const data = {
       participantsName,
       participantID,
@@ -98,8 +93,8 @@ function Schedule() {
   return (
     <>
       <Navbar />
-      <div className="heading">Schedule Interview</div>
       <div className="parent-card">
+        <div className="heading">Schedule Interview</div>
         <div className="innerContent">
           <div style={{ display: "flex" }}>
             Select Candidate Name:
@@ -126,7 +121,8 @@ function Schedule() {
                 users?.map((user) => {
                   return {
                     value: user.participantID,
-                    label: user.participantName + "  ID:" + user.participantID,
+                    label:
+                      user.participantName + "(" + user.participantID + ")",
                   };
                 })
               }
@@ -156,7 +152,12 @@ function Schedule() {
                 )}
               />
             </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               End Time:
               <TimePicker
                 label="End Time"
@@ -191,10 +192,14 @@ function Schedule() {
               )}
             />
           </div>
+          <Button
+            onClick={createInterview}
+            variant="contained"
+            style={{ margin: "25px auto", display: "block" }}
+          >
+            Schedule Interview
+          </Button>
         </div>
-        <Button onClick={createInterview} variant="contained">
-          Schedule Interview
-        </Button>
       </div>
     </>
   );

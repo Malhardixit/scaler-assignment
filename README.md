@@ -27,12 +27,15 @@ To start the backend server, run the following command:
 ## ✨ TechStack
 - React, NodeJs, MongoDB
 
-## ✨ Glimpse of Website
 
-# HomePage
+
+
+# 👉 Glimpse of Website
+
+### HomePage
 ![image](https://user-images.githubusercontent.com/25477443/220917671-b802297d-10ab-4b0e-9cc4-a41d9366e016.png)
 
-# Schedule Interview
+### Schedule Interview
 ![image](https://user-images.githubusercontent.com/25477443/220918377-1a5366b1-794d-42bb-8a44-576378bda2ee.png)
 
 

@@ -57,3 +57,8 @@ This is a REST API for creating and fetching interviews
 ### Check the Website hosted on :`https://scaler-assignment.netlify.app/`
 ### All APIs are hosted on:`https://scaler-assignment.onrender.com`
 
+
+### Note:Haven't made it responsive,however can easily extend it further.
+Please check website in desktop
+
+

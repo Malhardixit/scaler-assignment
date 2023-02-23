@@ -7,6 +7,7 @@ import axios from "axios";
 import group from "../assets/grpIcon.png";
 import searchIcon from "../assets/search.png";
 import moment from "moment";
+import api from "./api";
 
 function Home() {
   const [value, onChange] = useState(new Date());
@@ -20,7 +21,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/interviews")
+      .get(`${api}/interviews`)
       .then((res) => {
         setData(res.data);
       })
@@ -59,7 +60,7 @@ function Home() {
 
     if (editingInterviewID === interviewID) {
       axios
-        .post(`http://localhost:3001/editInterview`, body)
+        .post(`${api}/editInterview`, body)
         .then((res) => {
           alert("Interview Updated Successfully!");
         })
@@ -77,12 +78,12 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/getInterviewsbyDate/${formatDate}`)
+      .get(`${api}/getInterviewsbyDate/${formatDate}`)
       .then((res) => {
         setTodaySchedule(res.data);
       })
       .catch((err) => {
-        setScheduleError(err.response.data);
+        alert(err.response.data);
       });
   }, [formatDate]);
 

@@ -6,6 +6,7 @@ import Select from "react-select";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { Button, TextField } from "@mui/material";
 import moment from "moment";
+import api from "./api";
 
 function Schedule() {
   const [users, setUsers] = useState(null);
@@ -13,7 +14,10 @@ function Schedule() {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [endTimeError, setEndTimeError] = useState(null);
+  const [timeError, setTimeError] = useState({
+    startTimeError: null,
+    endTimeError: null,
+  });
 
   const formatStart = startTime && startTime.toLocaleTimeString();
   const formatEnd = endTime && endTime.toLocaleTimeString();
@@ -46,7 +50,7 @@ function Schedule() {
     };
 
     axios
-      .post("http://localhost:3001/createInterview", data)
+      .post(`${api}/createInterview`, data)
       .then((res) => {
         if (res.data === "Interview Scheduled Successfully") {
           alert("Interview Scheduled");
@@ -66,21 +70,49 @@ function Schedule() {
   };
 
   const handleStartTimeChange = (time) => {
-    setStartTime(time);
-    setEndTimeError(null);
+    const newStartTime = time;
+    const newEndTime = endTime;
+
+    if (
+      newEndTime &&
+      moment(newStartTime, "HH:mm").isAfter(moment(newEndTime, "HH:mm"))
+    ) {
+      setTimeError({
+        ...timeError,
+        startTimeError: "Start time should be less than end time",
+      });
+    } else {
+      setTimeError({
+        ...timeError,
+        startTimeError: null,
+      });
+      setStartTime(time);
+    }
   };
 
   const handleEndTimeChange = (time) => {
-    if (startTime && time < startTime) {
-      setEndTimeError("End time must be after start time");
+    const newStartTime = startTime;
+    const newEndTime = time;
+
+    if (
+      newStartTime &&
+      moment(newEndTime, "HH:mm").isBefore(moment(newStartTime, "HH:mm"))
+    ) {
+      setTimeError({
+        ...timeError,
+        endTimeError: "End time should be greater than start time",
+      });
     } else {
-      setEndTimeError(null);
+      setTimeError({
+        ...timeError,
+        endTimeError: null,
+      });
       setEndTime(time);
     }
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3001/viewParticipants").then((res) => {
+    axios.get(`${api}/viewParticipants`).then((res) => {
       setUsers(res.data);
     });
   }, []);
@@ -139,9 +171,10 @@ function Schedule() {
                 onChange={handleStartTimeChange}
                 renderInput={(params) => (
                   <TextField
+                    helperText={timeError.startTimeError}
+                    error={timeError.startTimeError}
                     size="small"
                     {...params}
-                    error={false}
                     sx={{ marginTop: "15px", marginLeft: "120px" }}
                   />
                 )}
@@ -153,16 +186,16 @@ function Schedule() {
                 alignItems: "center",
               }}
             >
-              End Time:
+              <span style={{ marginTop: "20px" }}>End Time:</span>
               <TimePicker
                 label="End Time"
                 value={endTime}
                 onChange={handleEndTimeChange}
                 renderInput={(params) => (
                   <TextField
+                    helperText={timeError.endTimeError}
+                    error={timeError.endTimeError}
                     size="small"
-                    error={!!endTimeError}
-                    helperText={endTimeError}
                     {...params}
                     sx={{ marginTop: "15px", marginLeft: "10px" }}
                   />

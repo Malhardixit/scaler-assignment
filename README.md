@@ -47,7 +47,7 @@ This is a REST API for creating and fetching interviews
 # Routes
 ### - GET /interviews: Returns a list of all the interviews.
 ### - GET /viewParticipants: Returns a list of all the participants.
-### - GET /getInterviewsbyDate/:date: Returns a list of all the interviews that occur on the specified date.
+### - GET /getInterviewsbyDate/`:date`: Returns a list of all the interviews that occur on the specified date.
 
 
 ### - POST /createInterview: Creates a new interview.

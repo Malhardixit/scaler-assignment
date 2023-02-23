@@ -1,5 +1,5 @@
 # InterView-Portal
-A simple and userfriendly interview portal where admins can create interviews by selecting participants,interview start time and end time
+A simple and user-friendly interview portal where admins can create interviews by selecting participants,interview start time and end time
 
 ## 📖 Table of Contents
 
@@ -7,7 +7,7 @@ A simple and userfriendly interview portal where admins can create interviews by
 - [Usage](#usage)
 - [TechStack](#tech)
 
-## 👉 Installation
+## 👉 Pre-requisites
 Clone the repository:`https://github.com/Malhardixit/scaler-assignment.git`
 
 Navigate to project directory:`cd scaler-assignment`
@@ -33,10 +33,13 @@ To start the backend server, run the following command:
 # 👉 Glimpse of Website
 
 ### HomePage
-![image](https://user-images.githubusercontent.com/25477443/220917671-b802297d-10ab-4b0e-9cc4-a41d9366e016.png)
+![image](https://user-images.githubusercontent.com/25477443/220926056-9473755b-44b9-425a-8346-3f87c8d2011d.png)
+
 
 ### Schedule Interview
-![image](https://user-images.githubusercontent.com/25477443/220918377-1a5366b1-794d-42bb-8a44-576378bda2ee.png)
+![image](https://user-images.githubusercontent.com/25477443/220926692-0208a027-0f26-439d-960c-b8254d5a6701.png)
+
+
 
 
 

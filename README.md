@@ -41,14 +41,14 @@ To start the backend server, run the following command:
 
 This is a REST API for creating and fetching interviews
 
-## Routes
-# - GET /interviews: Returns a list of all the interviews.
-# - GET /viewParticipants: Returns a list of all the participants.
-# - GET /getInterviewsbyDate/:date: Returns a list of all the interviews that occur on the specified date.
+# Routes
+### - GET /interviews: Returns a list of all the interviews.
+### - GET /viewParticipants: Returns a list of all the participants.
+### - GET /getInterviewsbyDate/:date: Returns a list of all the interviews that occur on the specified date.
 
 
-# - POST /createInterview: Creates a new interview.
-# - POST /editInterview: Edits an existing interview.
+### - POST /createInterview: Creates a new interview.
+### - POST /editInterview: Edits an existing interview.
 
 
 

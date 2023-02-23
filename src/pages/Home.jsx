@@ -83,7 +83,7 @@ function Home() {
         setTodaySchedule(res.data);
       })
       .catch((err) => {
-        alert(err.response.data);
+        alert("No Interview found for the selected date");
       });
   }, [formatDate]);
 

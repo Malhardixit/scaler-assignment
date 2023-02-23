@@ -52,3 +52,8 @@ This is a REST API for creating and fetching interviews
 ### - POST /createInterview: Creates a new interview.
 
 ### - POST /editInterview: Edits an existing interview.
+
+
+## Check the Website hosted on :`https://scaler-assignment.netlify.app/`
+## All APIs are hosted on:`https://scaler-assignment.onrender.com`
+
